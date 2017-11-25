@@ -1,11 +1,15 @@
 {
-    "name": "slowprog/yclients-api",
+    "name": "leshgancomp/yclients-api",
     "description": "Yclients API php wrapper",
     "minimum-stability": "stable",
     "license": "Apache License 2.0",
     "authors": [
         {
             "name": "Andrey Tyshev",
+            "role": "Developer"
+        },
+        {
+            "name": "Alexey Morilov",
             "role": "Developer"
         }
     ],
