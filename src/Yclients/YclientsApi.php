@@ -5,11 +5,11 @@ namespace Yclients;
 /**
  * @see http://docs.yclients.apiary.io
  */
-final class YclientsApi
-{
+final class YclientsApi {
     /*
      * URL для RestAPI
      */
+
     const URL = 'https://api.yclients.com/api/v1';
 
     /*
@@ -34,8 +34,7 @@ final class YclientsApi
      * @return void
      * @access public
      */
-    public function __construct($tokenPartner = null)
-    {
+    public function __construct($tokenPartner = null) {
         $this->tokenPartner = $tokenPartner;
     }
 
@@ -47,10 +46,9 @@ final class YclientsApi
      * @return this
      * @access public
      */
-    public function setTokenPartner($tokenPartner)
-    {
+    public function setTokenPartner($tokenPartner) {
         $this->tokenPartner = $tokenPartner;
-        
+
         return $this;
     }
 
@@ -63,14 +61,13 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/0/0/0
      */
-    public function getAuth($login, $password)
-    {
+    public function getAuth($login, $password) {
         return $this->request('auth', [
-            'login' => $login, 
-            'password' => $password, 
-        ], self::METHOD_POST);
+                    'login' => $login,
+                    'password' => $password,
+                        ], self::METHOD_POST);
     }
-    
+
     /**
      * Получаем настройки формы бронирования
      *
@@ -79,11 +76,10 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/-/0/0
      */
-    public function getBookform($id)
-    {
-        return $this->request('bookform/'.$id);
+    public function getBookform($id) {
+        return $this->request('bookform/' . $id);
     }
-    
+
     /**
      * Получаем параметры интернационализации
      *
@@ -92,11 +88,10 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/-/1/0
      */
-    public function getI18n($locale = 'ru-RU')
-    {
-        return $this->request('i18n/'.$locale);
+    public function getI18n($locale = 'ru-RU') {
+        return $this->request('i18n/' . $locale);
     }
-    
+
     /**
      * Получить список услуг доступных для бронирования
      * 
@@ -115,15 +110,10 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/-/2/0
      */
     public function getBookServices(
-        $companyId, 
-        $staffId = null, 
-        \DateTime $datetime = null, 
-        array $serviceIds = null, 
-        array $eventIds = null
-    )
-    {
+    $companyId, $staffId = null, \DateTime $datetime = null, array $serviceIds = null, array $eventIds = null
+    ) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
@@ -139,10 +129,10 @@ final class YclientsApi
         if (!is_null($eventIds)) {
             $parameters['event_ids'] = $eventIds;
         }
-        
-        return $this->request('book_services/'.$companyId, $parameters);
+
+        return $this->request('book_services/' . $companyId, $parameters);
     }
-    
+
     /**
      * Получить список сотрудников доступных для бронирования
      * 
@@ -163,16 +153,10 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/-/3/0
      */
     public function getBookStaff(
-        $companyId, 
-        $staffId = null, 
-        \DateTime $datetime = null, 
-        array $serviceIds = null, 
-        array $eventIds = null,
-        $withoutSeances = false
-    )
-    {
+    $companyId, $staffId = null, \DateTime $datetime = null, array $serviceIds = null, array $eventIds = null, $withoutSeances = false
+    ) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
@@ -192,10 +176,10 @@ final class YclientsApi
         if ($withoutSeances) {
             $parameters['without_seances'] = true;
         }
-        
-        return $this->request('book_staff/'.$companyId, $parameters);
+
+        return $this->request('book_staff/' . $companyId, $parameters);
     }
-    
+
     /**
      * Получить список дат доступных для бронирования
      *
@@ -213,15 +197,10 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/-/4/0
      */
     public function getBookDates(
-        $companyId, 
-        $staffId = null, 
-        array $serviceIds = null, 
-        \DateTime $date = null, 
-        array $eventIds = null
-    )
-    {
+    $companyId, $staffId = null, array $serviceIds = null, \DateTime $date = null, array $eventIds = null
+    ) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
@@ -238,9 +217,9 @@ final class YclientsApi
             $parameters['event_ids'] = $eventIds;
         }
 
-        return $this->request('book_dates/'.$companyId, $parameters);
+        return $this->request('book_dates/' . $companyId, $parameters);
     }
-    
+
     /**
      * Получить список сеансов доступных для бронирования
      *
@@ -258,15 +237,10 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/-/5/0
      */
     public function getBookTimes(
-        $companyId, 
-        $staffId, 
-        \DateTime $date, 
-        array $serviceIds = null, 
-        array $eventIds = null
-    )
-    {
+    $companyId, $staffId, \DateTime $date, array $serviceIds = null, array $eventIds = null
+    ) {
         $parameters = array();
-        
+
         if (!is_null($serviceIds)) {
             $parameters['service_ids'] = $serviceIds;
         }
@@ -275,9 +249,9 @@ final class YclientsApi
             $parameters['event_ids'] = $eventIds;
         }
 
-        return $this->request('book_times/'.$companyId.'/'.$staffId.'/'.$date->format('Y-m-d'), $parameters);
+        return $this->request('book_times/' . $companyId . '/' . $staffId . '/' . $date->format('Y-m-d'), $parameters);
     }
-    
+
     /**
      * Отправить СМС код подтверждения номера телефона
      *
@@ -288,8 +262,7 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/-/6/0
      */
-    public function postBookCode($companyId, $phone, $fullname = null)
-    {
+    public function postBookCode($companyId, $phone, $fullname = null) {
         $parameters = array(
             'phone' => $phone
         );
@@ -298,9 +271,9 @@ final class YclientsApi
             $parameters['fullname'] = $fullname;
         }
 
-        return $this->request('book_code/'.$companyId, $parameters, self::METHOD_POST);
+        return $this->request('book_code/' . $companyId, $parameters, self::METHOD_POST);
     }
-    
+
     /**
      * Проверить параметры записи
      *
@@ -315,22 +288,21 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/-/7/0
      */
-    public function postBookCheck($companyId, array $appointments)
-    {
+    public function postBookCheck($companyId, array $appointments) {
         // проверим наличие обязательных параметров
         foreach ($appointments as $appointment) {
             if (
-                !isset($appointment['id']) ||
-                !isset($appointment['staff_id']) ||
-                !isset($appointment['datetime'])
+                    !isset($appointment['id']) ||
+                    !isset($appointment['staff_id']) ||
+                    !isset($appointment['datetime'])
             ) {
                 throw new YclientsException('Запись должна содержать все обязательные поля: id, staff_id, datetime.');
             }
         }
 
-        return $this->request('book_check/'.$companyId, $appointments, self::METHOD_POST);
+        return $this->request('book_check/' . $companyId, $appointments, self::METHOD_POST);
     }
-    
+
     /**
      * Создать запись на сеанс
      *
@@ -356,45 +328,38 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/-/8/0
      */
     public function postBookRecord(
-        $companyId, 
-        array $person, 
-        array $appointments, 
-        $code = null, 
-        array $notify = null, 
-        $comment = null, 
-        $apiId = null
-    )
-    {
+    $companyId, array $person, array $appointments, $code = null, array $notify = null, $comment = null, $apiId = null
+    ) {
         $parameters = array();
-        
+
         // проверим наличие обязательных параметров клиента
         if (
-            !isset($person['phone']) ||
-            !isset($person['fullname']) ||
-            !isset($person['email'])
+                !isset($person['phone']) ||
+                !isset($person['fullname']) ||
+                !isset($person['email'])
         ) {
             throw new YclientsException('Клиент должен содержать все обязательные поля: phone, fullname, email.');
         }
-        
+
         $parameters = array_merge($parameters, $person);
-        
+
         if (!count($appointments)) {
             throw new YclientsException('Должна быть хотя бы одна запись.');
         }
-        
+
         // проверим наличие обязательных параметров записей
         foreach ($appointments as $appointment) {
             if (
-                !isset($appointment['id']) ||
-                !isset($appointment['staff_id']) ||
-                !isset($appointment['datetime'])
+                    !isset($appointment['id']) ||
+                    !isset($appointment['staff_id']) ||
+                    !isset($appointment['datetime'])
             ) {
                 throw new YclientsException('Запись должна содержать все обязательные поля: id, staff_id, datetime.');
             }
         }
-        
+
         $parameters['appointments'] = $appointments;
-        
+
         if ($notify) {
             if (isset($notify['notify_by_sms'])) {
                 $parameters['notify_by_sms'] = $notify['notify_by_sms'];
@@ -403,22 +368,22 @@ final class YclientsApi
                 $parameters['notify_by_email'] = $notify['notify_by_email'];
             }
         }
-        
+
         if (!is_null($code)) {
             $parameters['code'] = $code;
         }
-        
+
         if (!is_null($comment)) {
             $parameters['comment'] = $comment;
         }
-        
+
         if (!is_null($apiId)) {
             $parameters['api_id'] = $apiId;
         }
-        
-        return $this->request('book_record/'.$companyId, $parameters, self::METHOD_POST);
+
+        return $this->request('book_record/' . $companyId, $parameters, self::METHOD_POST);
     }
-    
+
     /**
      * Авторизоваться по номеру телефона и коду
      *
@@ -428,8 +393,7 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/1/0/0
      */
-    public function postUserAuth($phone, $code)
-    {
+    public function postUserAuth($phone, $code) {
         $parameters = array(
             'phone' => $phone,
             'code' => $code,
@@ -437,7 +401,7 @@ final class YclientsApi
 
         return $this->request('user/auth', $parameters, self::METHOD_POST);
     }
-    
+
     /**
      * Получить записи пользователя
      *
@@ -450,15 +414,14 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/1/1/0
      */
-    public function getUserRecords($recordId, $recordHash = null, $userToken = null)
-    {
+    public function getUserRecords($recordId, $recordHash = null, $userToken = null) {
         if (!$recordHash && !$userToken) {
             trigger_error('getUserRecords() expected Argument 2 or Argument 3 required', E_USER_WARNING);
         }
-        
-        return $this->request('user/records/'.$recordId.'/'.$recordHash, [], self::METHOD_GET, $userToken?:true);
+
+        return $this->request('user/records/' . $recordId . '/' . $recordHash, [], self::METHOD_GET, $userToken ?: true);
     }
-    
+
     /**
      * Удалить записи пользователя
      *
@@ -471,17 +434,16 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/1/1/1
      */
-    public function deleteUserRecords($recordId, $recordHash = null, $userToken = null)
-    {
+    public function deleteUserRecords($recordId, $recordHash = null, $userToken = null) {
         if (!$recordHash && !$userToken) {
             trigger_error('deleteUserRecords() expected Argument 2 or Argument 3 required', E_USER_WARNING);
         }
-        
-        return $this->request('user/records/'.$recordId.'/'.$recordHash, [], self::METHOD_DELETE, $userToken?:true);
+
+        return $this->request('user/records/' . $recordId . '/' . $recordHash, [], self::METHOD_DELETE, $userToken ?: true);
     }
-    
+
     /**
-     * Получить список компаний
+     * Получить полный список компаний, со всех страниц
      * 
      * @param integer $groupId - ID сети компаний
      * @param bool $active - Если нужно получить только активные для онлайн-записи компании
@@ -493,35 +455,84 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/0/0
      */
-    public function getCompanies($groupId = null, $active = null, $moderated = null, $forBooking = null, $my = null, $userToken = null)
-    {
-        if (!$recordHash && !$userToken) {
+    public function getCompanies($groupId = null, $active = null, $moderated = null, $forBooking = null, $my = null, $userToken = null) {
+        if ($my && !$userToken) {
             trigger_error('getCompanies() expected Argument 6 if set Argument 5', E_USER_WARNING);
         }
-        
+
         $parameters = array();
-        
+
         if (!is_null($groupId)) {
             $parameters['group_id'] = $groupId;
         }
-        
+
         if (!is_null($active)) {
             $parameters['active'] = $active;
         }
-        
+
         if (!is_null($moderated)) {
             $parameters['moderated'] = $moderated;
         }
-        
+
         if (!is_null($forBooking)) {
             $parameters['forBooking'] = $forBooking;
         }
-        
+
         if (!is_null($my)) {
             $parameters['my'] = $my;
         }
-        
-        return $this->request('companies', $parameters, self::METHOD_GET, $userToken?:true);
+        $companies = $this->request('companies', $parameters, self::METHOD_GET, $userToken ?: true);
+        $request = $companies;
+        $parameters['page'] = 1;
+        while (count($request) > 0) { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
+            $request = $this->request('companies', $parameters, self::METHOD_GET, $userToken ?: true);
+            $parameters['page'] ++;
+            $companies = array_merge($companies, $request);
+        }
+        return $companies;
+    }
+
+    /**
+     * Получить полный список транзакций включая товарные, со всех страниц
+     * 
+     * @param integer $company_id - ID компании
+     * @param DateTime $start_date - Дата начала периода
+     * @param DateTime $end_date - Дата окончания периода
+     * @param integer $balance - 0 - любой баланс, 1 - положительный, 2 - отрицательный
+     * @param string $userToken - Токен для авторизации пользователя, обязательный, если $my указан
+     * @return array
+     * @access public
+     * @see http://docs.yclients.apiary.io/#reference/2/0/0
+     */
+    public function getTransactions($company_id, \DateTime $start_date = null, \DateTime $end_date = null, $balance = null, $userToken = null) {
+        if (!$userToken) {
+            trigger_error('getTransactions() expected Argument 5', E_USER_WARNING);
+        }
+
+        $parameters = array();
+        if (!is_null($start_date)) {
+            $parameters['start_date'] = $start_date->format('d.m.Y');
+        }
+
+        if (!is_null($end_date)) {
+            $parameters['end_date'] = $end_date->format('d.m.Y');
+        }
+
+        if (!is_null($balance)) {
+            $parameters['balance'] = $balance;
+        }
+
+        $transactions = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $userToken ?: true);
+        $request = $transactions;
+        $parameters['page'] = 1;
+        //echo "Page: ".$parameters['page']." count:".count($request)."\r\n";
+        do { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
+            $parameters['page'] = $parameters['page'] + 1;
+            $request = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $userToken ?: true);
+            //echo "Page: ".$parameters['page']." count:".count($request)."\r\n";
+            $transactions = array_merge($transactions, $request);
+        } while (count($request) > 0 && !isset($request['error']));
+        return $transactions;
     }
 
     /**
@@ -533,12 +544,11 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/0/1
      */
-    public function postCompany(array $fields, $userToken)
-    {
+    public function postCompany(array $fields, $userToken) {
         if (!isset($fields['title'])) {
             throw new YclientsException('Для создании компании обязательно название компании.');
         }
-        
+
         return $this->request('companies', $fields, self::METHOD_POST, $userToken);
     }
 
@@ -550,13 +560,12 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/1/0
      */
-    public function getCompany($id)
-    {
-        return $this->request('company/'.$id);
+    public function getCompany($id) {
+        return $this->request('company/' . $id);
     }
 
     /**
-     * Изменить компанию
+     * Получить компанию
      * 
      * @param integer $id
      * @param array $fields - Остальные необязательные поля для создания компании
@@ -565,9 +574,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/1/1
      */
-    public function putCompany($id, array $fields, $userToken)
-    {
-        return $this->request('company/'.$id, $fields, self::METHOD_PUT, $userToken);
+    public function putCompany($id, array $fields, $userToken) {
+        return $this->request('company/' . $id, $fields, self::METHOD_PUT, $userToken);
     }
 
     /**
@@ -578,9 +586,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/1/2
      */
-    public function deleteCompany($id)
-    {
-        return $this->request('company/'.$id, [], self::METHOD_DELETE);
+    public function deleteCompany($id) {
+        return $this->request('company/' . $id, [], self::METHOD_DELETE);
     }
 
     /**
@@ -593,15 +600,14 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/3/0/0
      */
-    public function getServiceCategories($companyId, $categoryId, $staffId = null)
-    {
+    public function getServiceCategories($companyId, $categoryId, $staffId = null) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-        
-        return $this->request('service_categories/'.$companyId.'/'.$categoryId, $parameters);
+
+        return $this->request('service_categories/' . $companyId . '/' . $categoryId, $parameters);
     }
 
     /**
@@ -619,9 +625,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/3/0/1
      */
-    public function postServiceCategories($companyId, $categoryId, $fields, $userToken)
-    {
-        return $this->request('service_categories/'.$companyId.'/'.$categoryId, $fields, self::METHOD_POST, $userToken);
+    public function postServiceCategories($companyId, $categoryId, $fields, $userToken) {
+        return $this->request('service_categories/' . $companyId . '/' . $categoryId, $fields, self::METHOD_POST, $userToken);
     }
 
     /**
@@ -633,9 +638,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/3/1/0
      */
-    public function getServiceCategory($companyId, $categoryId)
-    {
-        return $this->request('service_category/'.$companyId.'/'.$categoryId);
+    public function getServiceCategory($companyId, $categoryId) {
+        return $this->request('service_category/' . $companyId . '/' . $categoryId);
     }
 
     /**
@@ -652,9 +656,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/3/1/1
      */
-    public function putServiceCategory($companyId, $categoryId, $fields, $userToken)
-    {
-        return $this->request('service_category/'.$companyId.'/'.$categoryId, $fields, self::METHOD_PUT, $userToken);
+    public function putServiceCategory($companyId, $categoryId, $fields, $userToken) {
+        return $this->request('service_category/' . $companyId . '/' . $categoryId, $fields, self::METHOD_PUT, $userToken);
     }
 
     /**
@@ -667,9 +670,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/3/1/2
      */
-    public function deleteServiceCategory($companyId, $categoryId, $userToken)
-    {
-        return $this->request('service_category/'.$companyId.'/'.$categoryId, [], self::METHOD_DELETE, $userToken);
+    public function deleteServiceCategory($companyId, $categoryId, $userToken) {
+        return $this->request('service_category/' . $companyId . '/' . $categoryId, [], self::METHOD_DELETE, $userToken);
     }
 
     /**
@@ -683,19 +685,18 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/4/0//
      */
-    public function getServices($companyId, $serviceId = null, $staffId = null, $categoryId = null)
-    {
+    public function getServices($companyId, $serviceId = null, $staffId = null, $categoryId = null) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-        
+
         if (!is_null($categoryId)) {
             $parameters['category_id'] = $categoryId;
         }
-        
-        return $this->request('services/'.$companyId.'/'.$serviceId, $parameters);
+
+        return $this->request('services/' . $companyId . '/' . $serviceId, $parameters);
     }
 
     /**
@@ -711,16 +712,15 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/4/0/0
      */
-    public function postServices($companyId, $serviceId, $categoryId, $title, $userToken, array $fields = null)
-    {
+    public function postServices($companyId, $serviceId, $categoryId, $title, $userToken, array $fields = null) {
         $parameters = array(
             'category_id' => $categoryId,
             'title' => $title,
         );
-        
+
         $parameters = array_merge($parameters, $fields);
-        
-        return $this->request('services/'.$companyId.'/'.$serviceId, $parameters, self::METHOD_POST, $userToken);
+
+        return $this->request('services/' . $companyId . '/' . $serviceId, $parameters, self::METHOD_POST, $userToken);
     }
 
     /**
@@ -736,16 +736,15 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/4/0/1
      */
-    public function putServices($companyId, $serviceId, $categoryId, $title, $userToken, array $fields = null)
-    {
+    public function putServices($companyId, $serviceId, $categoryId, $title, $userToken, array $fields = null) {
         $parameters = array(
             'category_id' => $categoryId,
             'title' => $title,
         );
-        
+
         $parameters = array_merge($parameters, $fields);
-        
-        return $this->request('services/'.$companyId.'/'.$serviceId, $parameters, self::METHOD_PUT, $userToken);
+
+        return $this->request('services/' . $companyId . '/' . $serviceId, $parameters, self::METHOD_PUT, $userToken);
     }
 
     /**
@@ -758,9 +757,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/4/0/2
      */
-    public function deleteServices($companyId, $serviceId, $userToken)
-    {
-        return $this->request('services/'.$companyId.'/'.$serviceId, [], self::METHOD_DELETE, $userToken);
+    public function deleteServices($companyId, $serviceId, $userToken) {
+        return $this->request('services/' . $companyId . '/' . $serviceId, [], self::METHOD_DELETE, $userToken);
     }
 
     /**
@@ -772,9 +770,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/5//
      */
-    public function getEvents($companyId, $eventId = null)
-    {
-        return $this->request('events/'.$companyId.'/'.$eventId);
+    public function getEvents($companyId, $eventId = null) {
+        return $this->request('events/' . $companyId . '/' . $eventId);
     }
 
     /**
@@ -786,9 +783,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/6//
      */
-    public function getStaff($companyId, $staffId = null)
-    {
-        return $this->request('staff/'.$companyId.'/'.$staffId);
+    public function getStaff($companyId, $staffId = null) {
+        return $this->request('staff/' . $companyId . '/' . $staffId);
     }
 
     /**
@@ -803,15 +799,14 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/6/0/0
      */
-    public function postStaff($companyId, $staffId, $name, $userToken, array $fields = null)
-    {
+    public function postStaff($companyId, $staffId, $name, $userToken, array $fields = null) {
         $parameters = array(
             'name' => $name,
         );
-        
+
         $parameters = array_merge($parameters, $fields);
-        
-        return $this->request('staff/'.$companyId.'/'.$staffId, $parameters, self::METHOD_POST, $userToken);
+
+        return $this->request('staff/' . $companyId . '/' . $staffId, $parameters, self::METHOD_POST, $userToken);
     }
 
     /**
@@ -825,9 +820,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/6/0/1
      */
-    public function putStaff($companyId, $staffId, array $fields, $userToken)
-    {
-        return $this->request('staff/'.$companyId.'/'.$staffId, $fields, self::METHOD_PUT, $userToken);
+    public function putStaff($companyId, $staffId, array $fields, $userToken) {
+        return $this->request('staff/' . $companyId . '/' . $staffId, $fields, self::METHOD_PUT, $userToken);
     }
 
     /**
@@ -840,9 +834,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/6/0/2
      */
-    public function deleteStaff($companyId, $staffId, $userToken)
-    {
-        return $this->request('staff/'.$companyId.'/'.$staffId, [], self::METHOD_DELETE, $userToken);
+    public function deleteStaff($companyId, $staffId, $userToken) {
+        return $this->request('staff/' . $companyId . '/' . $staffId, [], self::METHOD_DELETE, $userToken);
     }
 
     /**
@@ -859,31 +852,30 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/0/0
      */
-    public function getClients($companyId, $userToken, $fullname = null, $phone = null, $email = null, $page = null, $count = null)
-    {
+    public function getClients($companyId, $userToken, $fullname = null, $phone = null, $email = null, $page = null, $count = null) {
         $parameters = array();
-        
+
         if (!is_null($fullname)) {
             $parameters['fullname'] = $fullname;
         }
-        
+
         if (!is_null($phone)) {
             $parameters['phone'] = $phone;
         }
-        
+
         if (!is_null($email)) {
             $parameters['email'] = $email;
         }
-        
+
         if (!is_null($page)) {
             $parameters['page'] = $page;
         }
-        
+
         if (!is_null($count)) {
             $parameters['count'] = $count;
         }
-        
-        return $this->request('clients/'.$companyId, $parameters, self::METHOD_GET, $userToken);
+
+        return $this->request('clients/' . $companyId, $parameters, self::METHOD_GET, $userToken);
     }
 
     /**
@@ -898,16 +890,15 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/0/1
      */
-    public function postClients($companyId, $name, $phone, $userToken, array $fields = null)
-    {
+    public function postClients($companyId, $name, $phone, $userToken, array $fields = null) {
         $parameters = array(
             'name' => $name,
             'phone' => $phone,
         );
-        
+
         $parameters = array_merge($parameters, $fields);
-        
-        return $this->request('clients/'.$companyId, $parameters, self::METHOD_POST, $userToken);
+
+        return $this->request('clients/' . $companyId, $parameters, self::METHOD_POST, $userToken);
     }
 
     /**
@@ -920,9 +911,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/1/0
      */
-    public function getClient($companyId, $id, $userToken)
-    {
-        return $this->request('client/'.$companyId.'/'.$id, [], self::METHOD_GET, $userToken);
+    public function getClient($companyId, $id, $userToken) {
+        return $this->request('client/' . $companyId . '/' . $id, [], self::METHOD_GET, $userToken);
     }
 
     /**
@@ -936,9 +926,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/1/1
      */
-    public function putClient($companyId, $id, $userToken, array $fields)
-    {
-        return $this->request('client/'.$companyId.'/'.$id, $fields, self::METHOD_PUT, $userToken);
+    public function putClient($companyId, $id, $userToken, array $fields) {
+        return $this->request('client/' . $companyId . '/' . $id, $fields, self::METHOD_PUT, $userToken);
     }
 
     /**
@@ -951,9 +940,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/1/2
      */
-    public function deleteClient($companyId, $id, $userToken)
-    {
-        return $this->request('client/'.$companyId.'/'.$id, [], self::METHOD_DELETE, $userToken);
+    public function deleteClient($companyId, $id, $userToken) {
+        return $this->request('client/' . $companyId . '/' . $id, [], self::METHOD_DELETE, $userToken);
     }
 
     /**
@@ -976,63 +964,51 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/8/0/0
      */
     public function getRecords(
-        $companyId, 
-        $userToken,
-        $page = null,
-        $count = null,
-        $staffId = null,
-        $clientId = null,
-        \DateTime $startDate = null,
-        \DateTime $endDate = null,
-        \DateTime $cStartDate = null,
-        \DateTime $cEndDate = null,
-        \DateTime $changedAfter = null,
-        \DateTime $changedBefore = null
-    )
-    {
+    $companyId, $userToken, $page = null, $count = null, $staffId = null, $clientId = null, \DateTime $startDate = null, \DateTime $endDate = null, \DateTime $cStartDate = null, \DateTime $cEndDate = null, \DateTime $changedAfter = null, \DateTime $changedBefore = null
+    ) {
         $parameters = array();
-        
+
         if (!is_null($page)) {
             $parameters['page'] = $page;
         }
-        
+
         if (!is_null($count)) {
             $parameters['count'] = $count;
         }
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-        
+
         if (!is_null($clientId)) {
             $parameters['client_id'] = $clientId;
         }
-        
+
         if (!is_null($startDate)) {
             $parameters['start_date'] = $startDate->format('Y-m-d');
         }
-        
+
         if (!is_null($endDate)) {
             $parameters['end_date'] = $endDate->format('Y-m-d');
         }
-        
+
         if (!is_null($cStartDate)) {
             $parameters['c_start_date'] = $cStartDate->format('Y-m-d');
         }
-        
+
         if (!is_null($cEndDate)) {
             $parameters['c_end_date'] = $cEndDate->format('Y-m-d');
         }
-        
+
         if (!is_null($changedAfter)) {
             $parameters['changed_after'] = $changedAfter->format(\DateTime::ISO8601);
         }
-        
+
         if (!is_null($changedBefore)) {
             $parameters['changed_before'] = $changedBefore->format(\DateTime::ISO8601);
         }
-        
-        return $this->request('records/'.$companyId, $parameters, self::METHOD_GET, $userToken);
+
+        return $this->request('records/' . $companyId, $parameters, self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1057,73 +1033,59 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/8/0/1
      */
     public function postRecords(
-        $companyId, 
-        $userToken,
-        $staffId,
-        $services,
-        $client,
-        \DateTime $datetime,
-        $seanceLength,
-        $saveIfBusy,
-        $sendSms,
-        $comment = null,
-        $smsRemainHours = null,
-        $emailRemainHours = null,
-        $apiId = null,
-        $attendance = null
-    )
-    {
+    $companyId, $userToken, $staffId, $services, $client, \DateTime $datetime, $seanceLength, $saveIfBusy, $sendSms, $comment = null, $smsRemainHours = null, $emailRemainHours = null, $apiId = null, $attendance = null
+    ) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-        
+
         if (!is_null($services)) {
             $parameters['services'] = $services;
         }
-        
+
         if (!is_null($client)) {
             $parameters['client'] = $client;
         }
-        
+
         if (!is_null($datetime)) {
             $parameters['datetime'] = $datetime->format(\DateTime::ISO8601);
         }
-        
+
         if (!is_null($seanceLength)) {
             $parameters['seance_length'] = $seanceLength;
         }
-        
+
         if (!is_null($saveIfBusy)) {
             $parameters['save_if_busy'] = $saveIfBusy;
         }
-        
+
         if (!is_null($sendSms)) {
             $parameters['send_sms'] = $sendSms;
         }
-        
+
         if (!is_null($comment)) {
             $parameters['comment'] = $comment;
         }
-        
+
         if (!is_null($smsRemainHours)) {
             $parameters['sms_remain_hours'] = $smsRemainHours;
         }
-        
+
         if (!is_null($emailRemainHours)) {
             $parameters['email_remain_hours'] = $emailRemainHours;
         }
-        
+
         if (!is_null($apiId)) {
             $parameters['api_id'] = $apiId;
         }
-        
+
         if (!is_null($attendance)) {
             $parameters['attendance'] = $attendance;
         }
-        
-        return $this->request('records/'.$companyId, $parameters, self::METHOD_POST, $userToken);
+
+        return $this->request('records/' . $companyId, $parameters, self::METHOD_POST, $userToken);
     }
 
     /**
@@ -1136,9 +1098,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/8/1/0
      */
-    public function getRecord($companyId, $recordId, $userToken)
-    {
-        return $this->request('record/'.$companyId.'/'.$recordId, [], self::METHOD_GET, $userToken);
+    public function getRecord($companyId, $recordId, $userToken) {
+        return $this->request('record/' . $companyId . '/' . $recordId, [], self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1152,9 +1113,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/8/1/1
      */
-    public function putRecord($companyId, $recordId, $userToken, array $fields)
-    {
-        return $this->request('record/'.$companyId.'/'.$recordId, $fields, self::METHOD_PUT, $userToken);
+    public function putRecord($companyId, $recordId, $userToken, array $fields) {
+        return $this->request('record/' . $companyId . '/' . $recordId, $fields, self::METHOD_PUT, $userToken);
     }
 
     /**
@@ -1167,9 +1127,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/8/1/2
      */
-    public function deleteRecord($companyId, $recordId, $userToken)
-    {
-        return $this->request('record/'.$companyId.'/'.$recordId, [], self::METHOD_DELETE, $userToken);
+    public function deleteRecord($companyId, $recordId, $userToken) {
+        return $this->request('record/' . $companyId . '/' . $recordId, [], self::METHOD_DELETE, $userToken);
     }
 
     /**
@@ -1183,9 +1142,24 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/9/0
      */
-    public function putSchedule($companyId, $staffId, $userToken, $fields)
-    {
-        return $this->request('schedule/'.$companyId.'/'.$staffId, $fields, self::METHOD_PUT, $userToken);
+    public function putSchedule($companyId, $staffId, $userToken, $fields) {
+        return $this->request('schedule/' . $companyId . '/' . $staffId, $fields, self::METHOD_PUT, $userToken);
+    }
+
+    /**
+     * Получить расписание работы сотрудника
+     * 
+     * @param integer $companyId - ID компании
+     * @param integer $staffId
+     * @param DateTime $fromDate
+     * @param DateTime $toDate
+     * @param string $userToken - Токен для авторизации пользователя
+     * @return array
+     * @access public
+     * @see http://docs.yclients.apiary.io/#reference/9/0
+     */
+    public function getSchedule($companyId, $staffId, \DateTime $fromDate, \DateTime $toDate, $userToken) {
+        return $this->request('schedule/' . $companyId . '/' . $staffId . '/' . $fromDate->format('Y-m-d') . '/' . $toDate->format('Y-m-d'), array(), self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1199,15 +1173,14 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/10/0/0
      */
-    public function getTimetableDates($companyId, \DateTime $date, $staffId, $userToken)
-    {
+    public function getTimetableDates($companyId, \DateTime $date, $staffId, $userToken) {
         $parameters = array();
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-        
-        return $this->request('timetable/dates/'.$companyId.'/'.$date->format('Y-m-d'), $parameters, self::METHOD_GET, $userToken);
+
+        return $this->request('timetable/dates/' . $companyId . '/' . $date->format('Y-m-d'), $parameters, self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1221,9 +1194,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/11/0/0
      */
-    public function getTimetableSeances($companyId, \DateTime $date, $staffId, $userToken)
-    {
-        return $this->request('timetable/seances/'.$companyId.'/'.$staffId.'/'.$date->format('Y-m-d'), [], self::METHOD_GET, $userToken);
+    public function getTimetableSeances($companyId, \DateTime $date, $staffId, $userToken) {
+        return $this->request('timetable/seances/' . $companyId . '/' . $staffId . '/' . $date->format('Y-m-d'), [], self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1240,33 +1212,27 @@ final class YclientsApi
      * @see http://docs.yclients.apiary.io/#reference/12/0/0
      */
     public function getComments(
-        $companyId, 
-        $userToken,
-        \DateTime $startDate = null, 
-        \DateTime $endDate = null, 
-        $staffId = null, 
-        $rating = null
-    )
-    {
+    $companyId, $userToken, \DateTime $startDate = null, \DateTime $endDate = null, $staffId = null, $rating = null
+    ) {
         $parameters = array();
-        
+
         if (!is_null($startDate)) {
             $parameters['start_date'] = $startDate->format('Y-m-d');
         }
-        
+
         if (!is_null($endDate)) {
             $parameters['end_date'] = $endDate->format('Y-m-d');
         }
-        
+
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-        
+
         if (!is_null($rating)) {
             $parameters['rating'] = $rating;
         }
-        
-        return $this->request('comments/'.$companyId, $parameters, self::METHOD_GET, $userToken);
+
+        return $this->request('comments/' . $companyId, $parameters, self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1278,9 +1244,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/13/0/0
      */
-    public function getCompanyUsers($companyId, $userToken)
-    {
-        return $this->request('company_users/'.$companyId, [], self::METHOD_GET, $userToken);
+    public function getCompanyUsers($companyId, $userToken) {
+        return $this->request('company_users/' . $companyId, [], self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1292,9 +1257,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/14/0/0
      */
-    public function getAccounts($companyId, $userToken)
-    {
-        return $this->request('accounts/'.$companyId, [], self::METHOD_GET, $userToken);
+    public function getAccounts($companyId, $userToken) {
+        return $this->request('accounts/' . $companyId, [], self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1308,13 +1272,12 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/14/0/0
      */
-    public function sendSMS($companyId, $userToken, $clientIds, $text)
-    {
+    public function sendSMS($companyId, $userToken, $clientIds, $text) {
         $parameters = array();
         $parameters['client_ids'] = $clientIds;
         $parameters['text'] = $text;
 
-        return $this->request('sms/clients/by_id/'.$companyId, $parameters, self::METHOD_POST, $userToken);
+        return $this->request('sms/clients/by_id/' . $companyId, $parameters, self::METHOD_POST, $userToken);
     }
 
     /**
@@ -1326,45 +1289,8 @@ final class YclientsApi
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/15/0/0
      */
-    public function getStorages($companyId, $userToken)
-    {
-        return $this->request('storages/'.$companyId, [], self::METHOD_GET, $userToken);
-    }
-
-    /**
-     * Получить настройки уведомлений о событиях
-     *
-     * @param integer $companyId - ID компании
-     * @param string $userToken - Токен для авторизации пользователя
-     * @return array
-     * @access public
-     * @see http://docs.yclients.apiary.io/#reference/18/0/0
-     */
-    public function getHooks($companyId, $userToken)
-    {
-        return $this->request('hooks_settings/' . $companyId, [], self::METHOD_GET, $userToken);
-    }
-
-    /**
-     * Изменить настройки уведомлений о событиях
-     *
-     * @param integer $companyId - ID компании
-     * @param array $fields
-     * @param string $userToken - Токен для авторизации пользователя
-     * @return array
-     * @access public
-     * @see http://docs.yclients.apiary.io/#reference/18/0/1
-     * @throw YclientsException
-     */
-    public function postHooks($companyId, array $fields, $userToken)
-    {
-        if (!isset($fields['url'])) {
-            throw new YclientsException('Не передан обязательный параметр url');
-        }
-        if (!isset($fields['active'])) {
-            throw new YclientsException('Не передан обязательный параметр active');
-        }
-        return $this->request('hooks_settings/' . $companyId, $fields, self::METHOD_POST, $userToken);
+    public function getStorages($companyId, $userToken) {
+        return $this->request('storages/' . $companyId, [], self::METHOD_GET, $userToken);
     }
 
     /**
@@ -1379,16 +1305,15 @@ final class YclientsApi
      * @access private
      * @throw YclientsException
      */
-    private function request($url, $parameters = [], $method = 'GET', $auth = true)
-    {
+    private function request($url, $parameters = [], $method = 'GET', $auth = true) {
         $headers = ['Content-Type: application/json'];
-        
+
         if ($auth) {
             if (is_null($this->tokenPartner)) {
                 throw new YclientsException('Не указан токен партнёра');
             }
-            
-            $headers[] = 'Authorization: Bearer '.$this->tokenPartner.(is_string($auth)?', User '.$auth:'');
+
+            $headers[] = 'Authorization: Bearer ' . $this->tokenPartner . (is_string($auth) ? ', User ' . $auth : '');
         }
 
         return $this->requestCurl($url, $parameters, $method, $headers);
@@ -1406,18 +1331,17 @@ final class YclientsApi
      * @access private
      * @throw YclientsException
      */
-    private function requestCurl($url, $parameters = [], $method = 'GET', $headers = [], $timeout = 30)
-    {
+    private function requestCurl($url, $parameters = [], $method = 'GET', $headers = [], $timeout = 30) {
         $ch = curl_init();
 
         if (count($parameters)) {
             if ($method == self::METHOD_GET) {
-                $url .= '?'. http_build_query($parameters);
+                $url .= '?' . http_build_query($parameters);
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($parameters));
             }
         }
-        
+
         if ($method == self::METHOD_POST) {
             curl_setopt($ch, CURLOPT_POST, true);
         } else if ($method == self::METHOD_PUT) {
@@ -1425,7 +1349,7 @@ final class YclientsApi
         } else if ($method == self::METHOD_DELETE) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, self::METHOD_DELETE);
         }
-            
+
         curl_setopt($ch, CURLOPT_URL, self::URL . '/' . $url);
         curl_setopt($ch, CURLOPT_FAILONERROR, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -1433,23 +1357,24 @@ final class YclientsApi
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        
+
         if (count($headers)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
-        
+
         $response = curl_exec($ch);
-        
+
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         $errno = curl_errno($ch);
         $error = curl_error($ch);
         curl_close($ch);
-        
+
         if ($errno) {
-            throw new YclientsException('Запрос произвести не удалось: '.$error, $errno);
+            throw new YclientsException('Запрос произвести не удалось: ' . $error, $errno);
         }
 
         return json_decode($response, true);
     }
+
 }
