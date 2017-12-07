@@ -527,12 +527,13 @@ final class YclientsApi {
         $parameters['page'] = 1;
         //echo "Page: ".$parameters['page']." count:".count($request)."\r\n";
         do { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
-            sleep(0.333);
             $parameters['page'] = $parameters['page'] + 1;
             $request = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $userToken ?: true);
             //print_r($request);
             //echo "Page: ".$parameters['page']." count:".count($request)."\r\n";
-            $transactions = array_merge($transactions, $request);
+            if (!isset($request['errors'])){
+                $transactions = array_merge($transactions, $request);
+            }
         } while (count($request) > 0 && !isset($request['errors']));
         return $transactions;
     }
@@ -1334,6 +1335,7 @@ final class YclientsApi {
      * @throw YclientsException
      */
     private function requestCurl($url, $parameters = [], $method = 'GET', $headers = [], $timeout = 30) {
+        sleep(0.333);
         $ch = curl_init();
 
         if (count($parameters)) {
