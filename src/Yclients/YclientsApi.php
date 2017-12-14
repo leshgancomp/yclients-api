@@ -27,6 +27,14 @@ final class YclientsApi {
      * @access private
      */
     private $tokenPartner;
+    
+    /**
+     * Токен доступа авторизации пользователя
+     * 
+     * @var string
+     * @access private
+     */
+    private $tokenUser;
 
     /**
      * @param string $token
@@ -62,10 +70,12 @@ final class YclientsApi {
      * @see http://docs.yclients.apiary.io/#reference/0/0/0
      */
     public function getAuth($login, $password) {
-        return $this->request('auth', [
+        $data = $this->request('auth', [
                     'login' => $login,
                     'password' => $password,
                         ], self::METHOD_POST);
+        $this->tokenUser = isset($data['user_token'])?$data['user_token']:false;
+        return $data;
     }
 
     /**
@@ -855,30 +865,26 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/0/0
      */
-    public function getClients($companyId, $userToken, $fullname = null, $phone = null, $email = null, $page = null, $count = null) {
+    public function getClients($companyId, $fullname = null, $phone = null, $email = null, $page = null, $count = null) {
         $parameters = array();
-
-        if (!is_null($fullname)) {
-            $parameters['fullname'] = $fullname;
+        if (!is_null($fullname)) { $parameters['fullname'] = $fullname; }
+        if (!is_null($phone)) { $parameters['phone'] = $phone; }
+        if (!is_null($email)) { $parameters['email'] = $email; }
+        if (!is_null($page)) { $parameters['page'] = $page; }
+        if (!is_null($count)) { $parameters['count'] = $count; }
+        if (!$this->tokenUser){ return false; }
+        $request = $this->request('clients/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
+        $clients = array();
+        if (isset($request['data'])){
+            $clients = $request['data'];
+            $parameters['page'] = 1;
+            while (isset($request['data']) && count($request['data']) > 0 && is_null($page)) { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
+                $parameters['page'] ++;
+                $request = $this->request('clients/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
+                $clients = array_merge($clients, $request['data']);
+            }
         }
-
-        if (!is_null($phone)) {
-            $parameters['phone'] = $phone;
-        }
-
-        if (!is_null($email)) {
-            $parameters['email'] = $email;
-        }
-
-        if (!is_null($page)) {
-            $parameters['page'] = $page;
-        }
-
-        if (!is_null($count)) {
-            $parameters['count'] = $count;
-        }
-
-        return $this->request('clients/' . $companyId, $parameters, self::METHOD_GET, $userToken);
+        return $clients;
     }
 
     /**
