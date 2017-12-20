@@ -514,9 +514,9 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/0/0
      */
-    public function getTransactions($company_id, \DateTime $start_date = null, \DateTime $end_date = null, $balance = null, $userToken = null) {
-        if (!$userToken) {
-            trigger_error('getTransactions() expected Argument 5', E_USER_WARNING);
+    public function getTransactions($company_id, \DateTime $start_date = null, \DateTime $end_date = null, $balance = null) {
+        if (!$this->tokenUser) {
+            trigger_error('Fail to get user token', E_USER_WARNING);
         }
 
         $parameters = array();
@@ -531,16 +531,14 @@ final class YclientsApi {
         if (!is_null($balance)) {
             $parameters['balance'] = $balance;
         }
-
-        $transactions = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $userToken ?: true);
+        $parameters['count'] = 150;
+        $transactions = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $this->tokenUser ?: true);
         $request = $transactions;
         $parameters['page'] = 1;
         //echo "Page: ".$parameters['page']." count:".count($request)."\r\n";
         do { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
             $parameters['page'] = $parameters['page'] + 1;
-            $request = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $userToken ?: true);
-            //print_r($request);
-            //echo "Page: ".$parameters['page']." count:".count($request)."\r\n";
+            $request = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $this->tokenUser ?: true);
             if (!isset($request['errors'])){
                 $transactions = array_merge($transactions, $request);
             }
@@ -786,6 +784,19 @@ final class YclientsApi {
     public function getEvents($companyId, $eventId = null) {
         return $this->request('events/' . $companyId . '/' . $eventId);
     }
+    
+    /**
+     * Получить транзакцию по товару
+     * 
+     * @param integer $companyId - ID компании
+     * @param integer $transactionID - ID транзакции.
+     * @return array
+     * @access public
+     * @see http://docs.yclients.apiary.io/#reference/5//
+     */
+    public function getGoodsTransaction($companyId, $transactionID = null) {
+        return $this->request('storage_operations/goods_transactions/' . $companyId . '/' . $transactionID,array(), self::METHOD_GET, $this->tokenUser);
+    }
 
     /**
      * Получить список сотрудников / конкретного сотрудника
@@ -920,8 +931,8 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/7/1/0
      */
-    public function getClient($companyId, $id, $userToken) {
-        return $this->request('client/' . $companyId . '/' . $id, [], self::METHOD_GET, $userToken);
+    public function getClient($companyId, $id) {
+        return $this->request('client/' . $companyId . '/' . $id, [], self::METHOD_GET, $this->tokenUser);
     }
 
     /**
@@ -1107,8 +1118,8 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/8/1/0
      */
-    public function getRecord($companyId, $recordId, $userToken) {
-        return $this->request('record/' . $companyId . '/' . $recordId, [], self::METHOD_GET, $userToken);
+    public function getRecord($companyId, $recordId) {
+        return $this->request('record/' . $companyId . '/' . $recordId, [], self::METHOD_GET, $this->tokenUser);
     }
 
     /**
@@ -1341,7 +1352,7 @@ final class YclientsApi {
      * @throw YclientsException
      */
     private function requestCurl($url, $parameters = [], $method = 'GET', $headers = [], $timeout = 30) {
-        sleep(0.333);
+        sleep(0.2);
         $ch = curl_init();
 
         if (count($parameters)) {
