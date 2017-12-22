@@ -539,7 +539,7 @@ final class YclientsApi {
         do { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
             $parameters['page'] = $parameters['page'] + 1;
             $request = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $this->tokenUser ?: true);
-            if (!isset($request['errors'])){
+            if (!isset($request['errors']) && is_array($transactions)){
                 $transactions = array_merge($transactions, $request);
             }
         } while (count($request) > 0 && !isset($request['errors']));
@@ -1178,8 +1178,8 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/9/0
      */
-    public function getSchedule($companyId, $staffId, \DateTime $fromDate, \DateTime $toDate, $userToken) {
-        return $this->request('schedule/' . $companyId . '/' . $staffId . '/' . $fromDate->format('Y-m-d') . '/' . $toDate->format('Y-m-d'), array(), self::METHOD_GET, $userToken);
+    public function getSchedule($companyId, $staffId, \DateTime $fromDate, \DateTime $toDate) {
+        return $this->request('schedule/' . $companyId . '/' . $staffId . '/' . $fromDate->format('Y-m-d') . '/' . $toDate->format('Y-m-d'), array(), self::METHOD_GET, $this->tokenUser);
     }
 
     /**
