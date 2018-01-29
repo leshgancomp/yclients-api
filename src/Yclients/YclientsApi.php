@@ -1138,8 +1138,8 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/8/1/1
      */
-    public function putRecord($companyId, $recordId, $userToken, array $fields) {
-        return $this->request('record/' . $companyId . '/' . $recordId, $fields, self::METHOD_PUT, $userToken);
+    public function putRecord($companyId, $recordId, array $fields) {
+        return $this->request('record/' . $companyId . '/' . $recordId, $fields, self::METHOD_PUT, $this->tokenUser);
     }
 
     /**
