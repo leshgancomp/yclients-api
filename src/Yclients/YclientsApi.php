@@ -892,7 +892,9 @@ final class YclientsApi {
             while (isset($request['data']) && count($request['data']) > 0 && is_null($page)) { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
                 $parameters['page'] ++;
                 $request = $this->request('clients/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
-                $clients = array_merge($clients, $request['data']);
+                if (is_array($request['data'])){
+                    $clients = array_merge($clients, $request['data']);
+                }
             }
         }
         return $clients;
@@ -984,51 +986,54 @@ final class YclientsApi {
      * @see http://docs.yclients.apiary.io/#reference/8/0/0
      */
     public function getRecords(
-    $companyId, $userToken, $page = null, $count = null, $staffId = null, $clientId = null, \DateTime $startDate = null, \DateTime $endDate = null, \DateTime $cStartDate = null, \DateTime $cEndDate = null, \DateTime $changedAfter = null, \DateTime $changedBefore = null
+    $companyId, $page = null, $count = null, $staffId = null, $clientId = null, \DateTime $startDate = null, \DateTime $endDate = null, \DateTime $cStartDate = null, \DateTime $cEndDate = null, \DateTime $changedAfter = null, \DateTime $changedBefore = null
     ) {
         $parameters = array();
-
         if (!is_null($page)) {
             $parameters['page'] = $page;
+        }else{
+            $parameters['page'] = 1;
         }
-
         if (!is_null($count)) {
             $parameters['count'] = $count;
         }
-
         if (!is_null($staffId)) {
             $parameters['staff_id'] = $staffId;
         }
-
         if (!is_null($clientId)) {
             $parameters['client_id'] = $clientId;
         }
-
         if (!is_null($startDate)) {
             $parameters['start_date'] = $startDate->format('Y-m-d');
         }
-
         if (!is_null($endDate)) {
             $parameters['end_date'] = $endDate->format('Y-m-d');
         }
-
         if (!is_null($cStartDate)) {
             $parameters['c_start_date'] = $cStartDate->format('Y-m-d');
         }
-
         if (!is_null($cEndDate)) {
             $parameters['c_end_date'] = $cEndDate->format('Y-m-d');
         }
-
         if (!is_null($changedAfter)) {
             $parameters['changed_after'] = $changedAfter->format(\DateTime::ISO8601);
         }
-
         if (!is_null($changedBefore)) {
             $parameters['changed_before'] = $changedBefore->format(\DateTime::ISO8601);
         }
-
-        return $this->request('records/' . $companyId, $parameters, self::METHOD_GET, $userToken);
+        $parameters['count'] = 150;
+        $records = $this->request('records/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
+        $request = $records;
+        if (is_null($page)){
+            do { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
+                $parameters['page'] = $parameters['page'] + 1;
+                $request = $this->request('records/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
+                if (!isset($request['errors']) && is_array($records)) {
+                    $records = array_merge($records, $request);
+                }
+            } while (count($request) > 0 && !isset($request['errors']));
+        }
+        return $records;        
     }
 
     /**
