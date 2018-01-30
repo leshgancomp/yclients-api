@@ -1028,10 +1028,10 @@ final class YclientsApi {
             do { //Повторяя запросы создаем нагрузку на сервер так как YClients не сочло нужным отдать количество страниц
                 $parameters['page'] = $parameters['page'] + 1;
                 $request = $this->request('records/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
-                if (!isset($request['errors']) && is_array($records)) {
-                    $records = array_merge($records, $request);
+                if (!isset($request['errors']) && isset($request['data'])) {
+                    $records['data'] = array_merge($records['data'], $request['data']);
                 }
-            } while (count($request) > 0 && !isset($request['errors']));
+            } while (count($request['data']) > 0 && !isset($request['errors']));
         }
         return $records;        
     }
@@ -1132,7 +1132,6 @@ final class YclientsApi {
      * 
      * @param integer $companyId - ID компании
      * @param integer $recordId
-     * @param string $userToken - Токен для авторизации пользователя
      * @param array $fields
      * @return array
      * @access public
@@ -1140,6 +1139,20 @@ final class YclientsApi {
      */
     public function putRecord($companyId, $recordId, array $fields) {
         return $this->request('record/' . $companyId . '/' . $recordId, $fields, self::METHOD_PUT, $this->tokenUser);
+    }
+    
+    /**
+     * Изменить транзакцию
+     * 
+     * @param integer $companyId - ID компании
+     * @param integer $transactionId
+     * @param array $fields
+     * @return array
+     * @access public
+     * @see http://docs.yclients.apiary.io/#reference/8/1/1
+     */
+    public function putTransaction($companyId, $transactionId, array $fields) {
+        return $this->request('finance_transactions/' . $companyId . '/' . $transactionId, $fields, self::METHOD_PUT, $this->tokenUser);
     }
 
     /**
