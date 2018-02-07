@@ -491,6 +491,7 @@ final class YclientsApi {
         if (!is_null($my)) {
             $parameters['my'] = $my;
         }
+        $parameters['count']=100;
         $companies = $this->request('companies', $parameters, self::METHOD_GET, $userToken ?: true);
         $request = $companies;
         $parameters['page'] = 1;
