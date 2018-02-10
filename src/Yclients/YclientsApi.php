@@ -1032,7 +1032,7 @@ final class YclientsApi {
                 if (!isset($request['errors']) && isset($request['data'])) {
                     $records['data'] = array_merge($records['data'], $request['data']);
                 }
-            } while (count($request['data']) > 0 && !isset($request['errors']));
+            } while (!isset($request['errors']) && count($request['data']) > 0);
         }
         return $records;        
     }
