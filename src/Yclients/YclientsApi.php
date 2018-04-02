@@ -515,7 +515,7 @@ final class YclientsApi {
      * @access public
      * @see http://docs.yclients.apiary.io/#reference/2/0/0
      */
-    public function getTransactions($company_id, \DateTime $start_date = null, \DateTime $end_date = null, $balance = null) {
+    public function getTransactions($company_id, \DateTime $start_date = null, \DateTime $end_date = null, $balance = null, $count = 150) {
         if (!$this->tokenUser) {
             trigger_error('Fail to get user token', E_USER_WARNING);
         }
@@ -532,7 +532,7 @@ final class YclientsApi {
         if (!is_null($balance)) {
             $parameters['balance'] = $balance;
         }
-        $parameters['count'] = 150;
+        $parameters['count'] = $count;
         $transactions = $this->request('transactions/' . $company_id, $parameters, self::METHOD_GET, $this->tokenUser ?: true);
         $request = $transactions;
         $parameters['page'] = 1;
