@@ -1022,7 +1022,7 @@ final class YclientsApi {
         if (!is_null($changedBefore)) {
             $parameters['changed_before'] = $changedBefore->format(\DateTime::ISO8601);
         }
-        $parameters['count'] = 150;
+        $parameters['count'] = 10000000;
         $records = $this->request('records/' . $companyId, $parameters, self::METHOD_GET, $this->tokenUser);
         $request = $records;
         if (is_null($page)){
